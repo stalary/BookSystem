@@ -36,6 +36,10 @@ public class ResponseMessage {
         return new ResponseMessage(resultEnum.getCode(), resultEnum.getMsg());
     }
 
+    public static ResponseMessage error(int code, String msg) {
+        return new ResponseMessage(code, msg);
+    }
+
     public static ResponseMessage successMessage(Object data) {
         return new ResponseMessage(0, "success", null, data);
     }
