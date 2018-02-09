@@ -21,6 +21,7 @@ public class MyException extends RuntimeException {
         return code;
     }
 
+
     public void setCode(Integer code) {
         this.code = code;
     }
