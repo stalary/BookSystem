@@ -18,21 +18,21 @@ public class Swagger2 {
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("demo")
+                .groupName("book")
                 .genericModelSubstitutes(DeferredResult.class)
                 .useDefaultResponseMessages(false)
                 .apiInfo(apiInfo())
                 .pathMapping("/")
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.stalary.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.stalary.book.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("登陆测试模块")
-                .description("源码请访问：https://github.com/stalary/SpringBootDemo")
+                .title("图书系统")
+                .description("源码请访问：https://github.com/stalary/BookSystem")
                 .termsOfServiceUrl("stalary.com")
                 .version("1.0")
                 .build();

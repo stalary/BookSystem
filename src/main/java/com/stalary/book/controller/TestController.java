@@ -10,6 +10,7 @@ import com.stalary.book.data.ResponseMessage;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * TestController
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RequestMapping("test")
 @RestController
+@ApiIgnore
 public class TestController {
 
     @GetMapping("get")
