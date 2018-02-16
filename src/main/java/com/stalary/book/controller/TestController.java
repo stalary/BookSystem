@@ -18,12 +18,12 @@ import springfox.documentation.annotations.ApiIgnore;
  * @author lirongqian
  * @since 2018/01/04
  */
-@RequestMapping("test")
+@RequestMapping("/test")
 @RestController
 @ApiIgnore
 public class TestController {
 
-    @GetMapping("get")
+    @GetMapping("/get")
     public ResponseMessage testGet() {
         return ResponseMessage.successMessage("测试成功");
     }

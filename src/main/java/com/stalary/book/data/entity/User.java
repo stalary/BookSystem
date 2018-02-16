@@ -11,6 +11,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * User
@@ -18,9 +20,24 @@ import javax.persistence.Entity;
  * @author lirongqian
  * @since 2018/02/09
  */
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class User {
+public class User extends BaseEntity {
+
+    /**
+     * 用户名
+     */
+    private String username;
+
+    /**
+     * 密码
+     */
+    private String password;
+
+    /**
+     * 密码盐
+     */
+    private String salt;
+
 }

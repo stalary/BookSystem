@@ -8,9 +8,9 @@ import java.lang.annotation.Target;
 /**
  * @author Stalary
  * @description
- * @date 2018/02/09
+ * @date 17/02/2018
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
-public @interface LoginRequired {
+@Target(ElementType.FIELD)
+public @interface UpdateTime {
 }

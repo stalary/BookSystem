@@ -14,4 +14,5 @@ package com.stalary.book.utils;
  * @since 2018/02/09
  */
 public class SystemUtil {
+
 }

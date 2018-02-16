@@ -12,5 +12,5 @@ package com.stalary.book.data.entity;
  * @author lirongqian
  * @since 2018/02/09
  */
-public class Book {
+public class Book extends BaseEntity {
 }

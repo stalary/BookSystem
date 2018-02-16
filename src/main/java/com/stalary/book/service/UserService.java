@@ -6,6 +6,9 @@
  */
 package com.stalary.book.service;
 
+import com.stalary.book.data.entity.User;
+import com.stalary.book.mapper.UserDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,5 +18,12 @@ import org.springframework.stereotype.Service;
  * @since 2018/02/09
  */
 @Service
-public class UserService {
+public class UserService{
+
+    @Autowired
+    private UserDao userDao;
+
+    public void save(User user) {
+        userDao.save(user);
+    }
 }
