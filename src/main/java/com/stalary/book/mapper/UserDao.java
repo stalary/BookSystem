@@ -17,9 +17,25 @@ public interface UserDao {
     String ALL_FIELDS = " id, username, password, salt, createTime, updateTime, status";
     String INSERT_FIELDS = " username, password, salt, createTime, updateTime";
 
+    /**
+     * 搜索所有用户
+     * @return 返回用户list
+     */
     @Select({"select ", ALL_FIELDS, " from ", TABLE_NAME})
     List<User> findAll();
 
+    /**
+     * 插入一个用户
+     * @param user 对象
+     */
     @Insert({"insert ", TABLE_NAME, "(", INSERT_FIELDS, ") values (#{username},#{password},#{salt},#{createTime},#{updateTime})"})
     void save(User user);
+
+    /**
+     * 通过用户名查找用户
+     * @param username 用户名
+     * @return
+     */
+    @Select({"select ", ALL_FIELDS, " from ", TABLE_NAME, " where username=#{username} and status = 0"})
+    User findByName(String username);
 }

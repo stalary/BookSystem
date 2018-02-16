@@ -1,7 +1,5 @@
 package com.stalary.book.data.entity;
 
-import com.stalary.book.annotation.CreateTime;
-import com.stalary.book.annotation.UpdateTime;
 import lombok.Data;
 
 import java.util.Date;
@@ -23,13 +21,11 @@ abstract class BaseEntity {
     /**
      * 创建时间
      */
-    @CreateTime
     private Date createTime;
 
     /**
      * 更新时间
      */
-    @UpdateTime
     private Date updateTime;
 
     /**

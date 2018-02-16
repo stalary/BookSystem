@@ -44,6 +44,10 @@ public class ResponseMessage {
         return new ResponseMessage(0, "success", null, data);
     }
 
+    public static ResponseMessage successMessage() {
+        return new ResponseMessage(0, "success", null, null);
+    }
+
     public static ResponseMessage failedMessage(String message) {
         return new ResponseMessage(1, "failed", message, null);
     }
