@@ -19,7 +19,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.UUID;
 
 @Service
@@ -79,17 +78,17 @@ public class QiniuService {
     /**
      * 上传图书封面
      *
-     * @param pdfUrl
+     * @param book
      * @return
      */
-    public Pair<Boolean, String> uploadCover(String pdfUrl) {
+    public Pair<Boolean, String> uploadCover(MultipartFile book) {
         Document document = new Document();
         // 缩放比例，1表示不缩放，0.5表示缩小到50%
         float zoom = 0.3f;
         // 旋转角度，0表示不旋转
         float rotation = 0f;
         try {
-            document.setUrl(new URL(pdfUrl));
+            document.setInputStream(book.getInputStream(), null);
             BufferedImage cover = (BufferedImage) document.getPageImage(0, GraphicsRenderingHints.SCREEN, Page.BOUNDARY_CROPBOX, rotation, zoom);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ImageIO.write(cover, "jpg", out);

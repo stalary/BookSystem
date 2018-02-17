@@ -45,7 +45,7 @@ public class BookController {
         Pair<Boolean, String> uploadBookPair = qiniuService.uploadBook(book);
         if (uploadBookPair.getValue0()) {
             String pdfUrl = uploadBookPair.getValue1();
-            Pair<Boolean, String> uploadCoverPair = qiniuService.uploadCover(pdfUrl);
+            Pair<Boolean, String> uploadCoverPair = qiniuService.uploadCover(book);
             if (uploadCoverPair.getValue0()) {
                 Book newBook = new Book();
                 newBook.setBookName(bookService.getBookName(book));
