@@ -13,6 +13,7 @@ import com.stalary.book.mapper.TicketDao;
 import com.stalary.book.mapper.UserDao;
 import com.stalary.book.utils.PasswordUtil;
 import com.stalary.book.utils.TimeUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ import java.util.Date;
  * @since 2018/02/09
  */
 @Service
+@Slf4j
 public class UserService{
 
     @Autowired
@@ -61,7 +63,6 @@ public class UserService{
         ticket.setCreateTime(new Date());
         ticket.setUpdateTime(new Date());
         ticketDao.save(ticket);
-
         UserContextHolder.set(user);
         return new Pair<>(true, "注册成功");
     }
@@ -88,6 +89,7 @@ public class UserService{
             ticket.setUserId(login.getId());
             ticketDao.updateExpired(ticket);
         }
+        log.error("user: " + login);
         UserContextHolder.set(login);
         return new Pair<>(true, "登录成功");
     }
