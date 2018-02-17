@@ -89,7 +89,6 @@ public class UserService{
             ticket.setUserId(login.getId());
             ticketDao.updateExpired(ticket);
         }
-        log.error("user: " + login);
         UserContextHolder.set(login);
         return new Pair<>(true, "登录成功");
     }

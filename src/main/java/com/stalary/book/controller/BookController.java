@@ -10,6 +10,7 @@ import com.stalary.book.data.ResponseMessage;
 import com.stalary.book.service.QiniuService;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +30,7 @@ public class BookController {
     @Autowired
     private QiniuService qiniuService;
 
-    @RequestMapping("/upload")
+    @PostMapping("/book")
     public ResponseMessage uploadBook(@RequestParam("book") MultipartFile book) {
         Pair<Boolean, String> uploadBookPair = qiniuService.uploadBook(book);
         if (uploadBookPair.getValue0()) {
