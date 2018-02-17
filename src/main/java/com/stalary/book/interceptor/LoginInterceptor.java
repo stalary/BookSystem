@@ -6,6 +6,11 @@
  */
 package com.stalary.book.interceptor;
 
+import com.stalary.book.data.ResultEnum;
+import com.stalary.book.data.entity.Ticket;
+import com.stalary.book.data.entity.User;
+import com.stalary.book.exception.MyException;
+import com.stalary.book.handle.UserContextHolder;
 import com.stalary.book.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Date;
 
 /**
  * LoginInterceptor
@@ -35,6 +41,18 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         response.setCharacterEncoding("UTF-8");
         if (request.getRequestURI().contains("swagger")) {
             return true;
+        }
+        User user = (User) request.getSession().getAttribute("user");
+        if (user != null) {
+            Ticket ticket = userService.findByUser(user.getId());
+            if (ticket != null) {
+                if (ticket.getExpired().getTime() < System.currentTimeMillis()) {
+                    throw new MyException(ResultEnum.NEED_LOGIN);
+                }
+                UserContextHolder.set(user);
+            }
+        } else {
+            throw new MyException(ResultEnum.NEED_LOGIN);
         }
         return true;
     }

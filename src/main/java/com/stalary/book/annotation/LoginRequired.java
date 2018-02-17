@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * @author Stalary
- * @description
+ * @description 要求登录的权限验证
  * @date 2018/02/09
  */
 @Retention(RetentionPolicy.RUNTIME)

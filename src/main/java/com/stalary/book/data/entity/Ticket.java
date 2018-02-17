@@ -2,6 +2,7 @@ package com.stalary.book.data.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.Date;
  * @author lirongqian
  * @since 2018/02/16
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,12 +25,12 @@ public class Ticket extends BaseEntity {
     private int userId;
 
     /**
-     * 到期时间
-     */
-    private Date expired;
-
-    /**
      * 编码
      */
     private String ticket;
+
+    /**
+     * 到期时间
+     */
+    private Date expired;
 }

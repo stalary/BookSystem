@@ -25,12 +25,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @ApiOperation(value = "登录", notes = "只需要传入用户名和密码")
+    @ApiOperation(value = "登录", notes = "只需要传入用户名和密码，如果保存密码，save传true")
     @PostMapping("/login")
     public ResponseMessage login(
             @RequestBody User user,
+            @RequestParam(required = false, defaultValue = "false") boolean save,
             HttpServletRequest request) {
-        Pair<Boolean, String> login = userService.login(user);
+        Pair<Boolean, String> login = userService.login(user, save);
         if (login.getValue0()) {
             request.getSession().setAttribute("user", UserContextHolder.get());
             return ResponseMessage.successMessage(login.getValue1());
@@ -56,5 +57,11 @@ public class UserController {
     public ResponseMessage update(
             @RequestBody User user) {
         return ResponseMessage.successMessage();
+    }
+
+    @ApiOperation(value = "获取个人信息")
+    @GetMapping("/info")
+    public ResponseMessage get() {
+        return ResponseMessage.successMessage(UserContextHolder.get());
     }
 }

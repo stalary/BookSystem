@@ -8,6 +8,7 @@ package com.stalary.book.data.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -16,9 +17,10 @@ import lombok.NoArgsConstructor;
  * @author lirongqian
  * @since 2018/02/09
  */
+@EqualsAndHashCode(callSuper = true)
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class User extends BaseEntity {
 
     /**
