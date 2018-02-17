@@ -1,5 +1,6 @@
 package com.stalary.book.mapper;
 
+import com.stalary.book.BookApplication;
 import com.stalary.book.data.entity.User;
 import com.stalary.book.utils.PasswordUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -29,13 +30,14 @@ public class UserDaoTest {
     @Test
     public void save() {
         User user = new User();
-        user.setUsername("hawk");
+        user.setUsername("stalary");
         String salt = PasswordUtil.getSalt();
-        user.setPassword(PasswordUtil.getPassword("071268", salt));
+        user.setPassword(PasswordUtil.getPassword("li197910", salt));
         user.setSalt(salt);
         user.setCreateTime(new Date());
         user.setUpdateTime(new Date());
         userDao.save(user);
         log.info("list: " + userDao.findAll());
     }
+
 }
