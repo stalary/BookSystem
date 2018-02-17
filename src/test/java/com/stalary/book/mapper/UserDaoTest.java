@@ -1,6 +1,5 @@
 package com.stalary.book.mapper;
 
-import com.stalary.book.BookApplication;
 import com.stalary.book.data.entity.User;
 import com.stalary.book.utils.PasswordUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -28,16 +28,16 @@ public class UserDaoTest {
     private UserDao userDao;
 
     @Test
+    @Transactional
     public void save() {
         User user = new User();
-        user.setUsername("stalary");
+        user.setUsername("hawk");
         String salt = PasswordUtil.getSalt();
-        user.setPassword(PasswordUtil.getPassword("li197910", salt));
+        user.setPassword(PasswordUtil.getPassword("071268", salt));
         user.setSalt(salt);
         user.setCreateTime(new Date());
         user.setUpdateTime(new Date());
         userDao.save(user);
         log.info("list: " + userDao.findAll());
     }
-
 }
