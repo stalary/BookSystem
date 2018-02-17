@@ -76,6 +76,12 @@ public class QiniuService {
         }
     }
 
+    /**
+     * 上传图书封面
+     *
+     * @param pdfUrl
+     * @return
+     */
     public Pair<Boolean, String> uploadCover(String pdfUrl) {
         Document document = new Document();
         // 缩放比例，1表示不缩放，0.5表示缩小到50%
@@ -92,16 +98,11 @@ public class QiniuService {
             if (response.isOK() && response.isJson()) {
                 return new Pair<>(true, QINIU_IMAGE_DOMAIN + JSONObject.parseObject(response.bodyString()).get("key"));
             }
-            log.error("上传封面图片失败：" + response.bodyString());
-            return new Pair<>(false, "上传封面图片失败");
+            log.error("上传图书封面失败：" + response.bodyString());
+            return new Pair<>(false, "上传图书封面失败");
         } catch (Exception e) {
-            log.error("上传封面图片失败：" + e.getMessage());
-            return new Pair<>(false, "上传封面图片失败");
+            log.error("上传图书封面失败：" + e.getMessage());
+            return new Pair<>(false, "上传图书封面失败");
         }
-    }
-
-    public String getBookName(MultipartFile book) {
-        int dotPos = book.getOriginalFilename().lastIndexOf(".");
-        return book.getOriginalFilename().substring(0, dotPos);
     }
 }

@@ -35,7 +35,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addInterceptor(localInterceptor())
                 .excludePathPatterns("/user/register")
                 .excludePathPatterns("/user/login")
-                .excludePathPatterns("/book/upload")
                 .addPathPatterns("/**");
     }
 
