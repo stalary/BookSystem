@@ -7,6 +7,8 @@ import com.qiniu.http.Response;
 import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
+import com.stalary.book.utils.PasswordUtil;
+import com.stalary.book.utils.SystemUtil;
 import org.javatuples.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.icepdf.core.pobjects.Document;
@@ -19,7 +21,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * QiniuService
@@ -30,6 +33,9 @@ import java.util.UUID;
 @Service
 @Slf4j
 public class QiniuService {
+
+    private static ExecutorService executor = Executors.newCachedThreadPool();
+
 
     // 账号密钥，可在个人中心-密钥管理中查看
     private static String ACCESS_KEY = "TnIOszZVvneKT9xI9ySSiXpbpCsJeBGoFCUu6jTl";
@@ -55,30 +61,31 @@ public class QiniuService {
      * @param book
      * @return
      */
-    public Pair<Boolean, String> uploadBook(MultipartFile book) {
-        try {
-            int dotPos = book.getOriginalFilename().lastIndexOf(".");
-            if (dotPos < 0) {
-                return new Pair<>(false, "上传图书格式错误");
+    public String uploadBook(MultipartFile book) {
+        final String bookName = SystemUtil.BOOK + SystemUtil.SPLIT +  PasswordUtil.get5UUID() + ".pdf";
+        executor.execute(() -> {
+            try {
+                int dotPos = book.getOriginalFilename().lastIndexOf(".");
+                if (dotPos < 0) {
+                    log.error("上传图书格式错误");
+                }
+                String bookExt = book.getOriginalFilename().substring(dotPos + 1).toLowerCase();
+                if (!bookExt.equals("pdf")) {
+                    log.error("上传图书格式错误");
+                }
+                Response response = uploadManager.put(book.getBytes(), bookName, getUpToken());
+                if (response.isOK() && response.isJson()) {
+                    log.info("上传图书成功： " + bookName);
+                } else {
+                    log.error("上传图书失败：" + response.bodyString());
+                }
+            } catch (QiniuException e) {
+                log.error("七牛异常：" + e.getMessage());
+            } catch (IOException e) {
+                log.error("IO异常：" + e.getMessage());
             }
-            String bookExt = book.getOriginalFilename().substring(dotPos + 1).toLowerCase();
-            if (!bookExt.equals("pdf")) {
-                return new Pair<>(false, "上传图书格式错误");
-            }
-            String bookName = UUID.randomUUID().toString().replace("-", "") + "." + bookExt;
-            Response response = uploadManager.put(book.getBytes(), bookName, getUpToken());
-            if (response.isOK() && response.isJson()) {
-                return new Pair<>(true, QINIU_IMAGE_DOMAIN + JSONObject.parseObject(response.bodyString()).get("key"));
-            }
-            log.error("上传图书失败：" + response.bodyString());
-            return new Pair<>(false, "上传图书失败");
-        } catch (QiniuException e) {
-            log.error("七牛异常：" + e.getMessage());
-            return new Pair<>(false, "上传图书失败");
-        } catch (IOException e) {
-            log.error("IO异常：" + e.getMessage());
-            return new Pair<>(false, "上传图书失败");
-        }
+        });
+        return QINIU_IMAGE_DOMAIN + bookName;
     }
 
     /**
@@ -87,27 +94,29 @@ public class QiniuService {
      * @param book
      * @return
      */
-    public Pair<Boolean, String> uploadCover(MultipartFile book) {
-        Document document = new Document();
-        // 缩放比例，1表示不缩放，0.5表示缩小到50%
-        float zoom = 0.3f;
-        // 旋转角度，0表示不旋转
-        float rotation = 0f;
-        try {
-            document.setInputStream(book.getInputStream(), null);
-            BufferedImage cover = (BufferedImage) document.getPageImage(0, GraphicsRenderingHints.SCREEN, Page.BOUNDARY_CROPBOX, rotation, zoom);
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            ImageIO.write(cover, "jpg", out);
-            String coverName = UUID.randomUUID().toString().replace("-", "") + ".jpg";
-            Response response = uploadManager.put(out.toByteArray(), coverName, getUpToken());
-            if (response.isOK() && response.isJson()) {
-                return new Pair<>(true, QINIU_IMAGE_DOMAIN + JSONObject.parseObject(response.bodyString()).get("key"));
+    public String uploadCover(MultipartFile book) {
+        final String coverName = SystemUtil.COVER + SystemUtil.SPLIT + PasswordUtil.get5UUID() + ".jpg";
+        executor.execute(() -> {
+            Document document = new Document();
+            // 缩放比例，1表示不缩放，0.5表示缩小到50%
+            float zoom = 0.3f;
+            // 旋转角度，0表示不旋转
+            float rotation = 0f;
+            try {
+                document.setInputStream(book.getInputStream(), null);
+                BufferedImage cover = (BufferedImage) document.getPageImage(0, GraphicsRenderingHints.SCREEN, Page.BOUNDARY_CROPBOX, rotation, zoom);
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                ImageIO.write(cover, "jpg", out);
+                Response response = uploadManager.put(out.toByteArray(), coverName, getUpToken());
+                if (response.isOK() && response.isJson()) {
+                    log.info("上传图书封面成功");
+                } else {
+                    log.error("上传图书封面失败：" + response.bodyString());
+                }
+            } catch (Exception e) {
+                log.error("上传图书封面失败：" + e.getMessage());
             }
-            log.error("上传图书封面失败：" + response.bodyString());
-            return new Pair<>(false, "上传图书封面失败");
-        } catch (Exception e) {
-            log.error("上传图书封面失败：" + e.getMessage());
-            return new Pair<>(false, "上传图书封面失败");
-        }
+        });
+        return QINIU_IMAGE_DOMAIN + coverName;
     }
 }

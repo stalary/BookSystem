@@ -10,7 +10,7 @@ import java.security.MessageDigest;
 import java.util.UUID;
 
 /**
- * MD5Util
+ * PasswordUtil
  *
  * @author lirongqian
  * @since 2018/02/09
@@ -53,11 +53,11 @@ public class PasswordUtil {
         }
     }
 
-    public static String getSalt() {
+    public static String get5UUID() {
         return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 5);
     }
 
-    public static String getTicket() {
+    public static String get10UUID() {
         return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
     }
 

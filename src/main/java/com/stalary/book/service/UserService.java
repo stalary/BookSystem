@@ -18,11 +18,7 @@ import com.stalary.book.utils.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.javatuples.Pair;
 
 import java.util.Date;
 
@@ -58,14 +54,14 @@ public class UserService{
         user.setUpdateTime(new Date());
         user.setCreateTime(new Date());
         String password = user.getPassword();
-        String salt = PasswordUtil.getSalt();
+        String salt = PasswordUtil.get5UUID();
         user.setSalt(salt);
         user.setPassword(PasswordUtil.getPassword(password, salt));
         save(user);
 
         Ticket ticket = new Ticket();
         ticket.setUserId(user.getId());
-        ticket.setTicket(PasswordUtil.getTicket());
+        ticket.setTicket(PasswordUtil.get10UUID());
         // 有效期默认1天
         ticket.setExpired(TimeUtil.plusDays(new Date(), 1));
         ticket.setCreateTime(new Date());

@@ -26,4 +26,10 @@ public class SystemUtil {
     public static final String WHERE = " where ";
 
     public static final String STATUS = " and status >= 0";
+
+    public static final String BOOK = "book";
+
+    public static final String COVER = "cover";
+
+    public static final String SPLIT = ":";
 }

@@ -11,6 +11,7 @@ import com.stalary.book.data.ResponseMessage;
 import com.stalary.book.data.entity.Book;
 import com.stalary.book.handle.UserContextHolder;
 import com.stalary.book.service.BookService;
+import com.stalary.book.service.ManagerService;
 import com.stalary.book.service.QiniuService;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,31 +35,12 @@ import java.util.Date;
 public class BookController {
 
     @Autowired
-    private QiniuService qiniuService;
-
-    @Autowired
-    private BookService bookService;
+    private ManagerService managerService;
 
     @LoginRequired
     @PostMapping("/book")
     public ResponseMessage uploadBook(@RequestParam("book") MultipartFile book) {
-        Pair<Boolean, String> uploadBookPair = qiniuService.uploadBook(book);
-        if (uploadBookPair.getValue0()) {
-            String pdfUrl = uploadBookPair.getValue1();
-            Pair<Boolean, String> uploadCoverPair = qiniuService.uploadCover(book);
-            if (uploadCoverPair.getValue0()) {
-                Book newBook = new Book();
-                newBook.setBookName(bookService.getBookName(book));
-                newBook.setUserId(UserContextHolder.get().getId());
-                newBook.setCoverUrl(uploadCoverPair.getValue1());
-                newBook.setPdfUrl(pdfUrl);
-                newBook.setCreateTime(new Date());
-                newBook.setUpdateTime(new Date());
-                bookService.saveBook(newBook);
-                return ResponseMessage.successMessage("上传图书成功");
-            }
-            return ResponseMessage.failedMessage(uploadCoverPair.getValue1());
-        }
-        return ResponseMessage.failedMessage(uploadBookPair.getValue1());
+        managerService.upload(book);
+        return ResponseMessage.successMessage("上传成功！");
     }
 }

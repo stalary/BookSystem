@@ -32,7 +32,7 @@ public class UserDaoTest {
     public void save() {
         User user = new User();
         user.setUsername("hawk");
-        String salt = PasswordUtil.getSalt();
+        String salt = PasswordUtil.get5UUID();
         user.setPassword(PasswordUtil.getPassword("071268", salt));
         user.setSalt(salt);
         user.setCreateTime(new Date());
