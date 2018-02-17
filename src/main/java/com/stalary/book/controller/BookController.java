@@ -13,6 +13,7 @@ import com.stalary.book.handle.UserContextHolder;
 import com.stalary.book.service.BookService;
 import com.stalary.book.service.ManagerService;
 import com.stalary.book.service.QiniuService;
+import io.swagger.annotations.ApiOperation;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,10 +38,13 @@ public class BookController {
     @Autowired
     private ManagerService managerService;
 
+    @ApiOperation(value = "上传图书", notes = "若不传name，则默认为文件名")
     @LoginRequired
     @PostMapping("/book")
-    public ResponseMessage uploadBook(@RequestParam("book") MultipartFile book) {
-        managerService.upload(book);
+    public ResponseMessage uploadBook(
+            @RequestParam("book") MultipartFile book,
+            @RequestParam(required = false, defaultValue = "") String name) {
+        managerService.upload(book, name);
         return ResponseMessage.successMessage("上传成功！");
     }
 }

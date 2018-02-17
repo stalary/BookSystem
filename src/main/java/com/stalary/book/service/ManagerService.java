@@ -3,6 +3,7 @@ package com.stalary.book.service;
 import com.stalary.book.data.entity.Book;
 import com.stalary.book.handle.UserContextHolder;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,15 +30,17 @@ public class ManagerService {
     @Autowired
     private BookService bookService;
 
-    public void upload(MultipartFile book) {
+    public void upload(MultipartFile book, String name) {
         try {
             Future<?> bookSubmit = executor.submit(() -> qiniuService.uploadBook(book));
             Future<?> coverSubmit = executor.submit(() -> qiniuService.uploadCover(book));
 
-            log.info("bookSubmit: " + bookSubmit.get());
-            log.info("coverSubmit: " + coverSubmit.get());
             Book newBook = new Book();
-            newBook.setBookName(bookService.getBookName(book));
+            if (StringUtils.isBlank(name)) {
+                newBook.setBookName(bookService.getBookName(book));
+            } else {
+                newBook.setBookName(name);
+            }
             newBook.setUserId(UserContextHolder.get().getId());
             newBook.setPdfUrl(bookSubmit.get().toString());
             newBook.setCoverUrl(coverSubmit.get().toString());
