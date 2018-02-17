@@ -50,7 +50,7 @@ public class UserController {
         return ResponseMessage.failedMessage("注册失败");
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     @LoginRequired
     public ResponseMessage update(
             @RequestBody User user) {

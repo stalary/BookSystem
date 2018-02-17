@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  * BookService
  *
@@ -30,5 +32,9 @@ public class BookService {
     public String getBookName(MultipartFile book) {
         int dotPos = book.getOriginalFilename().lastIndexOf(".");
         return book.getOriginalFilename().substring(0, dotPos);
+    }
+
+    public List<Book> findAll() {
+        return bookDao.findAll();
     }
 }

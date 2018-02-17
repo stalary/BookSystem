@@ -16,10 +16,7 @@ import com.stalary.book.service.QiniuService;
 import io.swagger.annotations.ApiOperation;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
@@ -38,13 +35,22 @@ public class BookController {
     @Autowired
     private ManagerService managerService;
 
+    @Autowired
+    private BookService bookService;
+
     @ApiOperation(value = "上传图书", notes = "若不传name，则默认为文件名")
     @LoginRequired
-    @PostMapping("/book")
+    @PostMapping("/books")
     public ResponseMessage uploadBook(
             @RequestParam("book") MultipartFile book,
             @RequestParam(required = false, defaultValue = "") String name) {
         managerService.upload(book, name);
         return ResponseMessage.successMessage("上传成功！");
+    }
+
+    @ApiOperation("获取图书列表")
+    @GetMapping("/books")
+    public ResponseMessage getBookList() {
+        return ResponseMessage.successMessage(bookService.findAll());
     }
 }
