@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 public class User extends BaseEntity {
 
     /**
-     * 用户名
+     * 用户名(学号)
      */
     private String username;
 
@@ -37,5 +37,10 @@ public class User extends BaseEntity {
      * 密码盐
      */
     private String salt;
+
+    /**
+     * 邮箱(找回密码时使用)
+     */
+    private String mail;
 
 }

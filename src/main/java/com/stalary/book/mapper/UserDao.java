@@ -15,9 +15,8 @@ import java.util.List;
 public interface UserDao {
 
     String TABLE_NAME = "user";
-    String ALL_FIELDS = " id, username, password, salt, createTime, updateTime, status";
-    String INSERT_FIELDS = " username, password, salt, createTime, updateTime";
-
+    String ALL_FIELDS = " id, username, password, salt, mail, createTime, updateTime, status";
+    String INSERT_FIELDS = " username, password, salt, mail, createTime, updateTime";
     /**
      * 搜索所有用户
      * @return 返回用户list
@@ -29,7 +28,7 @@ public interface UserDao {
      * 插入一个用户
      * @param user 对象
      */
-    @Insert({SystemUtil.INSERT, TABLE_NAME, "(", INSERT_FIELDS, ") values (#{username},#{password},#{salt},#{createTime},#{updateTime})"})
+    @Insert({SystemUtil.INSERT, TABLE_NAME, "(", INSERT_FIELDS, ") values (#{username},#{password},#{salt},#{mail},#{createTime},#{updateTime})"})
     void save(User user);
 
     /**
@@ -39,4 +38,11 @@ public interface UserDao {
      */
     @Select({SystemUtil.SELECT, ALL_FIELDS, SystemUtil.FROM, TABLE_NAME, SystemUtil.WHERE, "username=#{username}", SystemUtil.STATUS})
     User findByName(String username);
+
+    /**
+     * 修改密码
+     * @param user 对象
+     */
+    @Update({SystemUtil.UPDATE, TABLE_NAME, " set password=#{password}, updateTime=#{updateTime}", SystemUtil.WHERE, "username=#{username}", SystemUtil.STATUS})
+    void update(User user);
 }

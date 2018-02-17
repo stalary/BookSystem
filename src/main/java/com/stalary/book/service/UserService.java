@@ -6,8 +6,10 @@
  */
 package com.stalary.book.service;
 
+import com.stalary.book.data.ResultEnum;
 import com.stalary.book.data.entity.Ticket;
 import com.stalary.book.data.entity.User;
+import com.stalary.book.exception.MyException;
 import com.stalary.book.handle.UserContextHolder;
 import com.stalary.book.mapper.TicketDao;
 import com.stalary.book.mapper.UserDao;
@@ -37,15 +39,18 @@ public class UserService{
     @Autowired
     private TicketDao ticketDao;
 
-    public Pair<Boolean, String> register(User user) {
+    public boolean register(User user) {
         if (StringUtils.isBlank(user.getUsername())) {
-            return new Pair<>(false, "注册失败！用户名不能为空！");
+            throw new MyException(ResultEnum.USERNAME_ERROR);
         }
         if (userDao.findByName(user.getUsername()) != null) {
-            return new Pair<>(false, "注册失败！该用户名已被注册！");
+            throw new MyException(ResultEnum.REPEAT_REGISTER);
         }
         if (StringUtils.isBlank(user.getPassword())) {
-            return new Pair<>(false, "注册失败！密码不能为空！");
+            throw new MyException(ResultEnum.PASSWORD_ERROR);
+        }
+        if (StringUtils.isBlank(user.getMail())) {
+            throw new MyException(ResultEnum.EMAIL_ERROR);
         }
         user.setUpdateTime(new Date());
         user.setCreateTime(new Date());
@@ -64,22 +69,16 @@ public class UserService{
         ticket.setUpdateTime(new Date());
         ticketDao.save(ticket);
         UserContextHolder.set(user);
-        return new Pair<>(true, "注册成功");
+        return true;
     }
 
-    public Pair<Boolean, String> login(User user, boolean save) {
-        if (StringUtils.isBlank(user.getUsername())) {
-            return new Pair<>(false, "登录失败！用户名不能为空！");
-        }
+    public boolean login(User user, boolean save) {
         User login = userDao.findByName(user.getUsername());
-        if (login == null) {
-            return new Pair<>(false, "登录失败！用户名不存在！");
+        if (StringUtils.isBlank(user.getUsername()) || login == null) {
+            throw new MyException(ResultEnum.USERNAME_ERROR);
         }
-        if (StringUtils.isBlank(user.getPassword())) {
-            return new Pair<>(false, "登录失败！密码不能为空！");
-        }
-        if (!login.getPassword().equals(PasswordUtil.getPassword(user.getPassword(), login.getSalt()))) {
-            return new Pair<>(false, "登录失败！密码错误！");
+        if (StringUtils.isBlank(user.getPassword()) || !login.getPassword().equals(PasswordUtil.getPassword(user.getPassword(), login.getSalt()))) {
+            throw new MyException(ResultEnum.PASSWORD_ERROR);
         }
         // 当点击保存密码时，延长ticket有效期
         if (save) {
@@ -87,10 +86,46 @@ public class UserService{
             ticket.setUpdateTime(new Date());
             ticket.setExpired(TimeUtil.plusDays(new Date(), 30));
             ticket.setUserId(login.getId());
+            ticket.setStatus(0);
+            ticketDao.updateExpired(ticket);
+        } else {
+            Ticket ticket = new Ticket();
+            ticket.setUpdateTime(new Date());
+            ticket.setExpired(TimeUtil.plusDays(new Date(), 1));
+            ticket.setUserId(login.getId());
+            ticket.setStatus(0);
             ticketDao.updateExpired(ticket);
         }
         UserContextHolder.set(login);
-        return new Pair<>(true, "登录成功");
+        return true;
+    }
+
+    public void logout() {
+        User user = UserContextHolder.get();
+        log.info("user: " + user);
+        Ticket ticket = ticketDao.findByUser(user.getId());
+        ticket.setStatus(-1);
+        ticket.setExpired(new Date());
+        ticket.setUpdateTime(new Date());
+        ticketDao.updateExpired(ticket);
+        UserContextHolder.remove();
+    }
+
+    public boolean update(User user) {
+        if (StringUtils.isBlank(user.getUsername())) {
+            throw new MyException(ResultEnum.USERNAME_ERROR);
+        }
+        User update = userDao.findByName(user.getUsername());
+        if (update == null) {
+            throw new MyException(ResultEnum.NOT_REGISTER);
+        }
+        if (StringUtils.isBlank(user.getMail()) || !user.getMail().equals(update.getMail())) {
+            throw new MyException(ResultEnum.EMAIL_ERROR);
+        }
+        update.setUpdateTime(new Date());
+        update.setPassword(PasswordUtil.getPassword(user.getPassword(), user.getSalt()));
+        userDao.update(update);
+        return true;
     }
 
     public Ticket findByUser(int userId) {

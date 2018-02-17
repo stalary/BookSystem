@@ -15,8 +15,10 @@ public enum ResultEnum {
     UNKNOW_ERROR(-100, "未知错误！"),
     NEED_LOGIN(-1, "未登录！"),
     REPEAT_REGISTER(-2, "该用户已注册！"),
-    USER_NOT_EXIST(-3, "不存在该用户"),
-    PASSWORD_ERROR(-4, "密码错误"),
+    USERNAME_ERROR(-3, "用户名错误！"),
+    PASSWORD_ERROR(-4, "密码错误！"),
+    EMAIL_ERROR(-5, "邮箱错误！"),
+    NOT_REGISTER(-6, "未注册"),
     SUCCESS(0, "成功");
 
 

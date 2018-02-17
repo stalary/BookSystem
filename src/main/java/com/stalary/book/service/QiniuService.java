@@ -21,6 +21,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
+/**
+ * QiniuService
+ *
+ * @author hawk
+ * @since 2018/02/09
+ */
 @Service
 @Slf4j
 public class QiniuService {

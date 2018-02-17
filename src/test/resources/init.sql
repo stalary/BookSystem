@@ -5,6 +5,7 @@ CREATE TABLE `user`
   username VARCHAR(50) NOT NULL,
   password VARCHAR(50) NOT NULL,
   salt VARCHAR(50) NOT NULL,
+  mail VARCHAR(50) NOT NULL,
   createTime DATETIME NOT NULL,
   updateTime DATETIME NOT NULL,
   status INT NOT NULL DEFAULT 0

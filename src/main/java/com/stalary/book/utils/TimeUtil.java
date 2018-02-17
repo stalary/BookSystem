@@ -88,36 +88,16 @@ public class TimeUtil {
     }
 
 
-    public static int dayOfMonth(Date date) {
 
-        return toLocalDate(date).getDayOfMonth();
-
-    }
-
-    public static LocalDate plusDays(LocalDate localDate) {
-        return localDate.plusDays(1);
-    }
-
-    public static Date plusDays(Date date) {
-        return toDate(toLocalDate(date).plusDays(1));
-    }
 
     public static Date plusDays(Date date, int days) {
-        return toDate(toLocalDate(date).plusDays(days));
+        return new Date(date.getTime() + 86400000L * days);
     }
 
     public static Date toDate(LocalDate localDate) {
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    public static LocalDate toLocalDate(Date date) {
-
-        if (date instanceof java.sql.Date) {
-            return ((java.sql.Date) date).toLocalDate();
-        }
-
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    }
 
     public static String getSystemDateStamp() {
         Date date = new Date();

@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 
 /**
@@ -15,7 +17,6 @@ import org.springframework.cache.annotation.Cacheable;
  * @date 17/02/2018
  */
 @Mapper
-@CacheConfig(cacheNames = "users")
 public interface TicketDao {
 
     String TABLE_NAME = "ticket";
@@ -34,7 +35,7 @@ public interface TicketDao {
      * @param userId
      * @return
      */
-    @Cacheable
+    @Cacheable(value = "ticket")
     @Select({SystemUtil.SELECT, ALL_FIELDS, SystemUtil.FROM, TABLE_NAME, SystemUtil.WHERE, "userId=#{userId}", SystemUtil.STATUS})
     Ticket findByUser(int userId);
 
@@ -42,6 +43,7 @@ public interface TicketDao {
      * 更新Ticket状态
      * @param ticket
      */
+    @CacheEvict(value = "ticket", key = "#ticket.userId")
     @Update({SystemUtil.UPDATE, TABLE_NAME, " set status=#{status} ", SystemUtil.WHERE, "userId=#{userId}"})
     void updateStatus(Ticket ticket);
 
@@ -49,7 +51,8 @@ public interface TicketDao {
      * 更新Ticket作废时间
      * @param ticket
      */
-    @Update({SystemUtil.UPDATE, TABLE_NAME, " set expired=#{expired} and updateTime=#{updateTime}", SystemUtil.WHERE, "userId=#{userId}"})
+    @CacheEvict(value = "ticket", key = "#ticket.userId")
+    @Update({SystemUtil.UPDATE, TABLE_NAME, " set expired=#{expired}, updateTime=#{updateTime}, status=0", SystemUtil.WHERE, "userId=#{userId}"})
     void updateExpired(Ticket ticket);
 
 }

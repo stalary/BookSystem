@@ -52,4 +52,8 @@ public class ResponseMessage {
         return new ResponseMessage(1, "failed", message, null);
     }
 
+    public static ResponseMessage failedMessage() {
+        return new ResponseMessage(1, "failed", null, null);
+    }
+
 }

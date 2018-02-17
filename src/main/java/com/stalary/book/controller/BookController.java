@@ -25,7 +25,7 @@ import java.util.Date;
 /**
  * BookController
  *
- * @author lirongqian
+ * @author hawk
  * @since 2018/02/09
  */
 

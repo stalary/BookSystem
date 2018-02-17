@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 /**
  * Book
  *
- * @author lirongqian
+ * @author hawk
  * @since 2018/02/09
  */
 

@@ -25,18 +25,17 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @ApiOperation(value = "登录", notes = "只需要传入用户名和密码，如果保存密码，save传true")
+    @ApiOperation(value = "登录", notes = "传入用户名(学号)和密码和邮箱(修改密码使用)，如果保存密码，save传true")
     @PostMapping("/login")
     public ResponseMessage login(
             @RequestBody User user,
             @RequestParam(required = false, defaultValue = "false") boolean save,
             HttpServletRequest request) {
-        Pair<Boolean, String> login = userService.login(user, save);
-        if (login.getValue0()) {
+        if (userService.login(user, save)) {
             request.getSession().setAttribute("user", UserContextHolder.get());
-            return ResponseMessage.successMessage(login.getValue1());
+            return ResponseMessage.successMessage("登录成功");
         }
-        return ResponseMessage.failedMessage(login.getValue1());
+        return ResponseMessage.failedMessage("登录失败");
     }
 
     @ApiOperation(value = "注册", notes = "只需要传入用户名和密码")
@@ -44,24 +43,35 @@ public class UserController {
     public ResponseMessage register(
             @RequestBody User user,
             HttpServletRequest request) {
-        Pair<Boolean, String> register = userService.register(user);
-        if (register.getValue0()) {
+        if (userService.register(user)) {
             request.getSession().setAttribute("user", UserContextHolder.get());
-            return ResponseMessage.successMessage(register.getValue1());
+            return ResponseMessage.successMessage("注册成功");
         }
-        return ResponseMessage.failedMessage(register.getValue1());
+        return ResponseMessage.failedMessage("注册失败");
     }
 
     @PutMapping("/update")
     @LoginRequired
     public ResponseMessage update(
             @RequestBody User user) {
-        return ResponseMessage.successMessage();
+        if (userService.update(user)) {
+            return ResponseMessage.successMessage("修改成功");
+        }
+        return ResponseMessage.failedMessage("修改失败");
     }
 
     @ApiOperation(value = "获取个人信息")
     @GetMapping("/info")
+    @LoginRequired
     public ResponseMessage get() {
         return ResponseMessage.successMessage(UserContextHolder.get());
+    }
+
+    @ApiOperation(value = "退出")
+    @GetMapping("/logout")
+    @LoginRequired
+    public ResponseMessage logout() {
+        userService.logout();
+        return ResponseMessage.successMessage("退出成功");
     }
 }
