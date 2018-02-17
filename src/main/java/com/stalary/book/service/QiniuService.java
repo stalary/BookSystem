@@ -75,7 +75,7 @@ public class QiniuService {
                 }
                 Response response = uploadManager.put(book.getBytes(), bookName, getUpToken());
                 if (response.isOK() && response.isJson()) {
-                    log.info("上传图书成功： " + bookName);
+                    log.info("上传图书成功：" + bookName);
                 } else {
                     log.error("上传图书失败：" + response.bodyString());
                 }
@@ -109,7 +109,7 @@ public class QiniuService {
                 ImageIO.write(cover, "jpg", out);
                 Response response = uploadManager.put(out.toByteArray(), coverName, getUpToken());
                 if (response.isOK() && response.isJson()) {
-                    log.info("上传图书封面成功" + coverName);
+                    log.info("上传图书封面成功：" + coverName);
                 } else {
                     log.error("上传图书封面失败：" + response.bodyString());
                 }
