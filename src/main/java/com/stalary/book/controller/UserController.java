@@ -70,8 +70,10 @@ public class UserController {
     @ApiOperation(value = "退出")
     @GetMapping("/logout")
     @LoginRequired
-    public ResponseMessage logout() {
+    public ResponseMessage logout(
+            HttpServletRequest request) {
         userService.logout();
+        request.getSession().removeAttribute("user");
         return ResponseMessage.successMessage("退出成功");
     }
 }

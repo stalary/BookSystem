@@ -18,6 +18,9 @@ import com.stalary.book.utils.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.javatuples.Pair;
 
@@ -102,9 +105,7 @@ public class UserService{
 
     public void logout() {
         User user = UserContextHolder.get();
-        log.info("user: " + user);
         Ticket ticket = ticketDao.findByUser(user.getId());
-        ticket.setStatus(-1);
         ticket.setExpired(new Date());
         ticket.setUpdateTime(new Date());
         ticketDao.updateExpired(ticket);
@@ -130,6 +131,11 @@ public class UserService{
 
     public Ticket findByUser(int userId) {
         return ticketDao.findByUser(userId);
+    }
+
+
+    public void updateTicket(Ticket ticket) {
+        ticketDao.updateExpired(ticket);
     }
 
     public void save(User user) {

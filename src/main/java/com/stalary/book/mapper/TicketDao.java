@@ -43,7 +43,6 @@ public interface TicketDao {
      * 更新Ticket状态
      * @param ticket
      */
-    @CacheEvict(value = "ticket", key = "#ticket.userId")
     @Update({SystemUtil.UPDATE, TABLE_NAME, " set status=#{status} ", SystemUtil.WHERE, "userId=#{userId}"})
     void updateStatus(Ticket ticket);
 
@@ -51,7 +50,7 @@ public interface TicketDao {
      * 更新Ticket作废时间
      * @param ticket
      */
-    @CacheEvict(value = "ticket", key = "#ticket.userId")
+    @CacheEvict(value = "ticket", allEntries = true)
     @Update({SystemUtil.UPDATE, TABLE_NAME, " set expired=#{expired}, updateTime=#{updateTime}, status=0", SystemUtil.WHERE, "userId=#{userId}"})
     void updateExpired(Ticket ticket);
 
