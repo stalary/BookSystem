@@ -15,4 +15,11 @@ package com.stalary.book.utils;
  */
 public class SystemUtil {
 
+    public static final String INSERT = "insert into ";
+
+    public static final String UPDATE = "update ";
+
+    public static final String SELECT = "select ";
+
+    public static final String FROM = " from ";
 }
