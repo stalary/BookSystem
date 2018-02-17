@@ -25,7 +25,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @ApiOperation(value = "登录", notes = "传入用户名(学号)和密码和邮箱(修改密码使用)，如果保存密码，save传true")
+    @ApiOperation(value = "登录", notes = "传入用户名(学号)和密码，如果保存密码，save传true")
     @PostMapping("/login")
     public ResponseMessage login(
             @RequestBody User user,
@@ -38,7 +38,7 @@ public class UserController {
         return ResponseMessage.failedMessage("登录失败");
     }
 
-    @ApiOperation(value = "注册", notes = "只需要传入用户名和密码")
+    @ApiOperation(value = "注册", notes = "只需要传入用户名(学号)和密码和邮箱(修改密码使用)")
     @PostMapping("/register")
     public ResponseMessage register(
             @RequestBody User user,
