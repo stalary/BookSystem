@@ -8,4 +8,9 @@ mybatis:
     default-statement-timeout: 3000
     map-underscore-to-camel-case: true
     use-generated-keys: true
-    log-impl: org.apache.ibatis.logging.log4j.Log4jImpl
+logging:
+  level:
+    com:
+      stalary:
+        book:
+          mapper: debug
