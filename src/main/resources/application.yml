@@ -1,6 +1,10 @@
 spring:
   profiles:
     active: dev
+  http:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
 mybatis:
   mapperLocations: classpath:mapper/*.xml
   configuration:
