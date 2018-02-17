@@ -22,7 +22,7 @@ public interface UserDao {
      * 搜索所有用户
      * @return 返回用户list
      */
-    @Select({SystemUtil.SELECT, ALL_FIELDS, SystemUtil.FROM, TABLE_NAME})
+    @Select({SystemUtil.SELECT, ALL_FIELDS, SystemUtil.FROM, TABLE_NAME, SystemUtil.WHERE, "status >= 0"})
     List<User> findAll();
 
     /**
@@ -37,6 +37,6 @@ public interface UserDao {
      * @param username 用户名
      * @return User
      */
-    @Select({SystemUtil.SELECT, ALL_FIELDS, " from ", TABLE_NAME, " where username=#{username} and status >= 0"})
+    @Select({SystemUtil.SELECT, ALL_FIELDS, SystemUtil.FROM, TABLE_NAME, SystemUtil.WHERE, "username=#{username}", SystemUtil.STATUS})
     User findByName(String username);
 }

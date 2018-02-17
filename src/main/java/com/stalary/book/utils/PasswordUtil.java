@@ -57,6 +57,10 @@ public class PasswordUtil {
         return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 5);
     }
 
+    public static String getTicket() {
+        return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
+    }
+
     public static String getPassword(String password, String salt) {
         return PasswordUtil.MD5(PasswordUtil.MD5(password) + salt);
     }

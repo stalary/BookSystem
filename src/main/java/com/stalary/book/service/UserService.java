@@ -6,10 +6,13 @@
  */
 package com.stalary.book.service;
 
+import com.stalary.book.data.entity.Ticket;
 import com.stalary.book.data.entity.User;
 import com.stalary.book.handle.UserContextHolder;
+import com.stalary.book.mapper.TicketDao;
 import com.stalary.book.mapper.UserDao;
 import com.stalary.book.utils.PasswordUtil;
+import com.stalary.book.utils.TimeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,9 @@ public class UserService{
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private TicketDao ticketDao;
+
     public Pair<Boolean, String> register(User user) {
         if (StringUtils.isBlank(user.getUsername())) {
             return new Pair<>(false, "注册失败！用户名不能为空！");
@@ -46,11 +52,21 @@ public class UserService{
         user.setSalt(salt);
         user.setPassword(PasswordUtil.getPassword(password, salt));
         save(user);
+
+        Ticket ticket = new Ticket();
+        ticket.setUserId(user.getId());
+        ticket.setTicket(PasswordUtil.getTicket());
+        // 有效期默认1天
+        ticket.setExpired(TimeUtil.plusDays(new Date(), 1));
+        ticket.setCreateTime(new Date());
+        ticket.setUpdateTime(new Date());
+        ticketDao.save(ticket);
+
         UserContextHolder.set(user);
         return new Pair<>(true, "注册成功");
     }
 
-    public Pair<Boolean, String> login(User user) {
+    public Pair<Boolean, String> login(User user, boolean save) {
         if (StringUtils.isBlank(user.getUsername())) {
             return new Pair<>(false, "登录失败！用户名不能为空！");
         }
@@ -64,8 +80,20 @@ public class UserService{
         if (!login.getPassword().equals(PasswordUtil.getPassword(user.getPassword(), login.getSalt()))) {
             return new Pair<>(false, "登录失败！密码错误！");
         }
+        // 当点击保存密码时，延长ticket有效期
+        if (save) {
+            Ticket ticket = new Ticket();
+            ticket.setUpdateTime(new Date());
+            ticket.setExpired(TimeUtil.plusDays(new Date(), 30));
+            ticket.setUserId(login.getId());
+            ticketDao.updateExpired(ticket);
+        }
         UserContextHolder.set(login);
         return new Pair<>(true, "登录成功");
+    }
+
+    public Ticket findByUser(int userId) {
+        return ticketDao.findByUser(userId);
     }
 
     public void save(User user) {
