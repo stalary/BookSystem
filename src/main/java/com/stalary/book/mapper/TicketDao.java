@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  * @author Stalary
@@ -13,6 +15,7 @@ import org.apache.ibatis.annotations.Update;
  * @date 17/02/2018
  */
 @Mapper
+@CacheConfig(cacheNames = "users")
 public interface TicketDao {
 
     String TABLE_NAME = "ticket";
@@ -31,6 +34,7 @@ public interface TicketDao {
      * @param userId
      * @return
      */
+    @Cacheable
     @Select({SystemUtil.SELECT, ALL_FIELDS, SystemUtil.FROM, TABLE_NAME, SystemUtil.WHERE, "userId=#{userId}", SystemUtil.STATUS})
     Ticket findByUser(int userId);
 
