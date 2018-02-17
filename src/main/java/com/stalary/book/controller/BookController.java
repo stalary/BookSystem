@@ -6,6 +6,7 @@
  */
 package com.stalary.book.controller;
 
+import com.stalary.book.annotation.LoginRequired;
 import com.stalary.book.data.ResponseMessage;
 import com.stalary.book.service.QiniuService;
 import org.javatuples.Pair;
@@ -30,6 +31,7 @@ public class BookController {
     @Autowired
     private QiniuService qiniuService;
 
+    @LoginRequired
     @PostMapping("/book")
     public ResponseMessage uploadBook(@RequestParam("book") MultipartFile book) {
         Pair<Boolean, String> uploadBookPair = qiniuService.uploadBook(book);
