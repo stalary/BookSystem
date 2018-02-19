@@ -61,7 +61,7 @@ public class TimeUtil {
             return "";
         }
 
-        return defaultFormatter.format(date);
+        return generalFormatter.format(date);
     }
 
     public static String dateToChinese(Date date) {

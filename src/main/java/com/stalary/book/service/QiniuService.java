@@ -99,7 +99,7 @@ public class QiniuService {
         executor.execute(() -> {
             Document document = new Document();
             // 缩放比例，1表示不缩放，0.5表示缩小到50%
-            float zoom = 0.3f;
+            float zoom = 0.5f;
             // 旋转角度，0表示不旋转
             float rotation = 0f;
             try {

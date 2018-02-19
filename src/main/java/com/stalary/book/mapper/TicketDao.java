@@ -20,7 +20,7 @@ import org.springframework.cache.annotation.Cacheable;
 public interface TicketDao {
 
     String TABLE_NAME = "ticket";
-    String ALL_FIELDS = " id, userId, ticket, expired, status";
+    String ALL_FIELDS = " id, userId, ticket, expired, createTime, updateTime, status";
     String INSERT_FIELDS = " userId, ticket, expired, createTime, updateTime";
 
     /**

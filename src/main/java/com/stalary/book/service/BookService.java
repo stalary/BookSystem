@@ -2,6 +2,7 @@ package com.stalary.book.service;
 
 import com.stalary.book.data.entity.Book;
 import com.stalary.book.mapper.BookDao;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,7 @@ import java.util.List;
  * @since 2018/02/09
  */
 @Service
+@Slf4j
 public class BookService {
 
     @Autowired
@@ -36,5 +38,20 @@ public class BookService {
 
     public List<Book> findAll() {
         return bookDao.findAll();
+    }
+
+    public String downloadBook(int id) {
+        Book book = getInfo(id);
+        if (book == null) {
+            log.error("book: " + id + "not found！");
+            return null;
+        } else {
+            bookDao.downloadBook(id, book.getDownloadCount() + 1);
+            return book.getPdfUrl();
+        }
+    }
+
+    public Book getInfo(int id) {
+        return bookDao.getInfo(id);
     }
 }

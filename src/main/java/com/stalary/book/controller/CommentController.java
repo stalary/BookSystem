@@ -1,0 +1,36 @@
+package com.stalary.book.controller;
+
+import com.stalary.book.annotation.LoginRequired;
+import com.stalary.book.data.ResponseMessage;
+import com.stalary.book.data.entity.Comment;
+import com.stalary.book.service.CommentService;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * CommentController
+ *
+ * @author lirongqian
+ * @since 2018/02/19
+ */
+@RestController
+@RequestMapping("comment")
+public class CommentController {
+
+    @Autowired
+    private CommentService commentService;
+
+    @ApiOperation("发表评论")
+    @PostMapping("/comments")
+    @LoginRequired
+    public ResponseMessage saveComment(
+            @RequestBody Comment comment) {
+        commentService.save(comment);
+        return ResponseMessage.successMessage("评论成功！");
+    }
+
+}

@@ -1,6 +1,10 @@
 package com.stalary.book.service;
 
+import com.stalary.book.data.dto.BookAndCommentDto;
+import com.stalary.book.data.dto.BookDto;
+import com.stalary.book.data.dto.CommentDto;
 import com.stalary.book.data.entity.Book;
+import com.stalary.book.data.entity.Comment;
 import com.stalary.book.handle.UserContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -10,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 /**
  * ManagerService
@@ -29,6 +35,15 @@ public class ManagerService {
 
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private CommentService commentService;
+
+    @Autowired
+    private BookDto bookDto;
+
+    @Autowired
+    private CommentDto commentDto;
 
     public void upload(MultipartFile book, String name) {
         try {
@@ -51,5 +66,14 @@ public class ManagerService {
         } catch (InterruptedException | ExecutionException e) {
             log.error("upload error!", e);
         }
+    }
+
+    public BookAndCommentDto getInfo(int id) {
+        BookDto book = bookDto.getBookDto(bookService.getInfo(id));
+        List<CommentDto> commentDtoList = commentService.findByBookId(id)
+                .stream()
+                .map(comment -> commentDto.getCommentDto(comment))
+                .collect(Collectors.toList());
+        return new BookAndCommentDto(book, commentDtoList);
     }
 }

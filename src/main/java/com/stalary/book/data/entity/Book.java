@@ -49,8 +49,4 @@ public class Book extends BaseEntity {
      */
     private int downloadCount;
 
-    /**
-     * 评分，初始化0分，满分5分
-     */
-    private int score;
 }

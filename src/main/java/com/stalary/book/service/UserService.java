@@ -129,12 +129,11 @@ public class UserService{
         return ticketDao.findByUser(userId);
     }
 
-
-    public void updateTicket(Ticket ticket) {
-        ticketDao.updateExpired(ticket);
-    }
-
     public void save(User user) {
         userDao.save(user);
+    }
+
+    public User getInfo(int id) {
+        return userDao.findById(id);
     }
 }

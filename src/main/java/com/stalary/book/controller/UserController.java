@@ -6,6 +6,7 @@ import com.stalary.book.data.entity.User;
 import com.stalary.book.handle.UserContextHolder;
 import com.stalary.book.service.UserService;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,7 @@ public class UserController {
         return ResponseMessage.failedMessage("登录失败");
     }
 
-    @ApiOperation(value = "注册", notes = "只需要传入用户名(学号)和密码和邮箱(修改密码使用)")
+    @ApiOperation(value = "注册", notes = "传入用户名(学号)和密码和邮箱(修改密码使用)以及昵称")
     @PostMapping("/register")
     public ResponseMessage register(
             @RequestBody User user,
@@ -60,11 +61,15 @@ public class UserController {
         return ResponseMessage.failedMessage("修改失败");
     }
 
-    @ApiOperation(value = "获取个人信息")
+    @ApiOperation(value = "获取个人信息", notes = "若不传入id，则为用户获取个人信息")
     @GetMapping("/info")
     @LoginRequired
-    public ResponseMessage get() {
-        return ResponseMessage.successMessage(UserContextHolder.get());
+    public ResponseMessage get(
+            @RequestParam(required = false, defaultValue = "0") int id) {
+        if (id == 0) {
+            return ResponseMessage.successMessage(UserContextHolder.get());
+        }
+        return ResponseMessage.successMessage(userService.getInfo(id));
     }
 
     @ApiOperation(value = "退出")

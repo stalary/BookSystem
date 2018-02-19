@@ -29,6 +29,11 @@ public class User extends BaseEntity {
     private String username;
 
     /**
+     * 昵称
+     */
+    private String nickname;
+
+    /**
      * 密码
      */
     private String password;
