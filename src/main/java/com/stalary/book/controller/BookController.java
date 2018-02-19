@@ -12,9 +12,11 @@ import com.stalary.book.data.dto.BookDto;
 import com.stalary.book.data.entity.Book;
 import com.stalary.book.handle.UserContextHolder;
 import com.stalary.book.service.BookService;
+import com.stalary.book.service.DtoService;
 import com.stalary.book.service.ManagerService;
 import com.stalary.book.service.QiniuService;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +36,7 @@ import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/book")
+@Slf4j
 public class BookController {
 
     @Autowired
@@ -43,7 +46,7 @@ public class BookController {
     private BookService bookService;
 
     @Autowired
-    private BookDto bookDto;
+    private DtoService dtoService;
 
     @ApiOperation(value = "上传图书", notes = "若不传name，则默认为文件名")
     @LoginRequired
@@ -63,7 +66,7 @@ public class BookController {
         List<Book> bookList = bookService.findAll();
         List<BookDto> bookDtoList = bookList
                 .stream()
-                .map(book -> bookDto.getBookDto(book))
+                .map(book -> dtoService.getBookDto(book))
                 .collect(Collectors.toList());
         return ResponseMessage.successMessage(bookDtoList);
     }
