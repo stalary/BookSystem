@@ -1,6 +1,5 @@
 package com.stalary.book.data.dto;
 
-import com.stalary.book.data.entity.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

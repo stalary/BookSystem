@@ -1,6 +1,5 @@
 package com.stalary.book.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
@@ -9,7 +8,6 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import com.stalary.book.utils.PasswordUtil;
 import com.stalary.book.utils.SystemUtil;
-import org.javatuples.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.icepdf.core.pobjects.Document;
 import org.icepdf.core.pobjects.Page;

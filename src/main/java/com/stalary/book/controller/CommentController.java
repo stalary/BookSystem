@@ -24,7 +24,7 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    @ApiOperation("发表评论")
+    @ApiOperation(value = "发表评论", notes = "传入评论内容和图书id")
     @PostMapping("/comments")
     @LoginRequired
     public ResponseMessage saveComment(

@@ -51,7 +51,8 @@ public class UserController {
         return ResponseMessage.failedMessage("注册失败");
     }
 
-    @PostMapping("/update")
+    @ApiOperation(value = "修改密码", notes = "传入用户名和邮箱")
+    @PutMapping("/update")
     @LoginRequired
     public ResponseMessage update(
             @RequestBody User user) {

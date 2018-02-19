@@ -1,9 +1,3 @@
-/**
- * @(#)BookController.java, 2018-02-09.
- * <p>
- * Copyright 2018 Youdao, Inc. All rights reserved.
- * YOUDAO PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
 package com.stalary.book.controller;
 
 import com.stalary.book.annotation.LoginRequired;
@@ -14,18 +8,14 @@ import com.stalary.book.handle.UserContextHolder;
 import com.stalary.book.service.BookService;
 import com.stalary.book.service.DtoService;
 import com.stalary.book.service.ManagerService;
-import com.stalary.book.service.QiniuService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * BookController
@@ -71,17 +61,39 @@ public class BookController {
         return ResponseMessage.successMessage(bookDtoList);
     }
 
-    @ApiOperation("获取一本图书的详细信息和评论信息")
+    @ApiOperation("获取一本图书的详细信息和评论信息，传入图书id")
     @GetMapping("/books/{bookId}/info")
     public ResponseMessage getInfo(
             @PathVariable("bookId") int bookId) {
         return ResponseMessage.successMessage(managerService.getInfo(bookId));
     }
 
-    @ApiOperation("下载时，获取图书的url，用于统计下载数量")
+    @ApiOperation("下载时，获取图书的url，用于统计下载数量，传入图书id")
     @GetMapping("/books/{bookId}")
     public ResponseMessage downloadBook(
             @PathVariable("bookId") int bookId) {
         return ResponseMessage.successMessage(bookService.downloadBook(bookId));
     }
+
+    @ApiOperation("查找用户上传的图书")
+    @GetMapping("/user/books")
+    @LoginRequired
+    public ResponseMessage findByUser() {
+        List<Book> bookList = bookService.findByUserId(UserContextHolder.get().getId());
+        List<BookDto> bookDtoList = bookList
+                .stream()
+                .map(book -> dtoService.getBookDto(book))
+                .collect(Collectors.toList());
+        return ResponseMessage.successMessage(bookDtoList);
+    }
+
+    @ApiOperation("删除一本图书")
+    @DeleteMapping("/books/{bookId}")
+    @LoginRequired
+    public ResponseMessage delete(
+            @PathVariable("bookId") int bookId) {
+        bookService.delete(bookId);
+        return ResponseMessage.successMessage("删除成功");
+    }
+
 }

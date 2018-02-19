@@ -32,6 +32,6 @@ public interface CommentDao {
      * @param bookId
      * @return
      */
-    @Select({SystemUtil.SELECT, ALL_FIELDS, SystemUtil.FROM, TABLE_NAME, SystemUtil.WHERE, "bookId=#{bookId}", SystemUtil.STATUS})
+    @Select({SystemUtil.SELECT, ALL_FIELDS, SystemUtil.FROM, TABLE_NAME, SystemUtil.WHERE, "bookId=#{bookId}", SystemUtil.STATUS, "order by score desc"})
     List<Comment> findByBookId(int bookId);
 }

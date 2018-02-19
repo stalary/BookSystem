@@ -54,4 +54,12 @@ public class BookService {
     public Book getInfo(int id) {
         return bookDao.getInfo(id);
     }
+
+    public void delete(int id) {
+        bookDao.delete(id);
+    }
+
+    public List<Book> findByUserId(int userId) {
+        return bookDao.findByUserId(userId);
+    }
 }

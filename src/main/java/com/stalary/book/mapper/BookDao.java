@@ -7,6 +7,11 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
+/**
+ * @author Stalary
+ * @description
+ * @date 19/02/2018
+ */
 @Mapper
 public interface BookDao {
 
@@ -39,7 +44,7 @@ public interface BookDao {
      * @return 图书List
      */
     @Select({SystemUtil.SELECT, ALL_FIELDS, SystemUtil.FROM, TABLE_NAME, SystemUtil.WHERE, "userId=#{userId}",
-            SystemUtil.STATUS, " ORDER BY createTime DESC,score DESC"})
+            SystemUtil.STATUS, " ORDER BY createTime DESC"})
     List<Book> findByUserId(int userId);
 
     /**
@@ -50,6 +55,19 @@ public interface BookDao {
     @Select({SystemUtil.SELECT, ALL_FIELDS, SystemUtil.FROM, TABLE_NAME, SystemUtil.WHERE, "id=#{id}", SystemUtil.STATUS})
     Book getInfo(int id);
 
+    /**
+     * 下载图书时修改下载数量
+     * @param id
+     * @param count
+     */
     @Update({SystemUtil.UPDATE, TABLE_NAME, "set downloadCount=#{count}", SystemUtil.WHERE, "id=#{id}", SystemUtil.STATUS})
     void downloadBook(@Param("id")int id, @Param("count") int count);
+
+    /**
+     * 删除一本图书
+     * @param id
+     */
+    @Update({SystemUtil.UPDATE, TABLE_NAME, "set status=-1", SystemUtil.WHERE, "id=#{id}", SystemUtil.STATUS})
+    void delete(int id);
+
 }
