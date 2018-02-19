@@ -141,18 +141,13 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.7</version>
 		</dependency>
-		<!-- log4j -->
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
-		</dependency>
 		<!--ICEpdf-->
 		<dependency>
 			<groupId>org.icepdf.os</groupId>
 			<artifactId>icepdf-core</artifactId>
 			<version>6.2.2</version>
 		</dependency>
+
 
 	</dependencies>
 
@@ -161,13 +156,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

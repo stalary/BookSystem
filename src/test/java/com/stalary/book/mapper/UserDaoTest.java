@@ -30,14 +30,6 @@ public class UserDaoTest {
     @Test
     @Transactional
     public void save() {
-        User user = new User();
-        user.setUsername("hawk");
-        String salt = PasswordUtil.get5UUID();
-        user.setPassword(PasswordUtil.getPassword("071268", salt));
-        user.setSalt(salt);
-        user.setCreateTime(new Date());
-        user.setUpdateTime(new Date());
-        userDao.save(user);
-        log.info("list: " + userDao.findAll());
+
     }
 }
