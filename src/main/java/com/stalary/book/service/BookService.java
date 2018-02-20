@@ -36,8 +36,8 @@ public class BookService {
         return book.getOriginalFilename().substring(0, dotPos);
     }
 
-    public List<Book> findAll() {
-        return bookDao.findAll();
+    public List<Book> findAll(int pageIndex, int pageSize) {
+        return bookDao.findAll((pageIndex - 1) * pageSize, pageSize);
     }
 
     public String downloadBook(int id) {
