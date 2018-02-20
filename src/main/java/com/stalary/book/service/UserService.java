@@ -114,7 +114,7 @@ public class UserService{
             throw new MyException(ResultEnum.EMAIL_ERROR);
         }
         update.setUpdateTime(new Date());
-        update.setPassword(PasswordUtil.getPassword(user.getPassword(), user.getSalt()));
+        update.setPassword(PasswordUtil.getPassword(user.getPassword(), update.getSalt()));
         userDao.update(update);
         return true;
     }
