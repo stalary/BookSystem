@@ -11,6 +11,8 @@
 - 评论打分
 - coding。。。
 
+### Developer
+Stalary Hawk
 
 ### 接口文档
 
