@@ -53,7 +53,7 @@ public class BookController {
     public ResponseMessage getBookList(
             @RequestParam(required = false, defaultValue = "1") int pageIndex,
             @RequestParam(required = false, defaultValue = "10") int pageSize) {
-        List<Book> bookList = bookService.findAll();
+        List<Book> bookList = bookService.findAll(pageIndex, pageSize);
         List<BookDto> bookDtoList = bookList
                 .stream()
                 .map(book -> dtoService.getBookDto(book))
