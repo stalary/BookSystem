@@ -45,9 +45,8 @@ public class ManagerService {
 
     public void upload(MultipartFile book, String name) {
         try {
-            Future<?> bookSubmit = executor.submit(() -> qiniuService.uploadBook(book));
             Future<?> coverSubmit = executor.submit(() -> qiniuService.uploadCover(book));
-
+            Future<?> bookSubmit = executor.submit(() -> qiniuService.uploadBook(book));
             Book newBook = new Book();
             if (StringUtils.isBlank(name)) {
                 newBook.setBookName(bookService.getBookName(book));
