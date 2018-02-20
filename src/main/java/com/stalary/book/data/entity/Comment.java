@@ -6,40 +6,36 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * User
+ * Comment
  *
  * @author lirongqian
- * @since 2018/02/09
+ * @since 2018/02/19
  */
 @EqualsAndHashCode(callSuper = true)
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User extends BaseEntity {
+@Data
+public class Comment extends BaseEntity {
 
     /**
-     * 用户名(学号)
+     * 评论内容
      */
-    private String username;
+    private String content;
 
     /**
-     * 昵称
+     * 评论分数
      */
-    private String nickname;
+    private int score = 0;
 
     /**
-     * 密码
+     * 评价人id，根据id去获取用户的昵称
      */
-    private String password;
+    private int userId;
 
     /**
-     * 密码盐
+     * 评价图书的id
      */
-    private String salt;
-
-    /**
-     * 邮箱(找回密码时使用)
-     */
-    private String mail;
+    private int bookId;
 
 }
+

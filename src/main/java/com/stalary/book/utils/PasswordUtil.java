@@ -1,20 +1,16 @@
-/**
- * @(#)MD5Util.java, 2018-02-09.
- * <p>
- * Copyright 2018 Youdao, Inc. All rights reserved.
- * YOUDAO PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
 package com.stalary.book.utils;
 
 import java.security.MessageDigest;
+import java.util.UUID;
 
 /**
- * MD5Util
+ * PasswordUtil
  *
  * @author lirongqian
  * @since 2018/02/09
  */
-public class MD5Util {
+public class PasswordUtil {
+
 
     public static String MD5(String pwd) {
         //用于加密的字符
@@ -49,5 +45,17 @@ public class MD5Util {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static String get5UUID() {
+        return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 5);
+    }
+
+    public static String get10UUID() {
+        return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
+    }
+
+    public static String getPassword(String password, String salt) {
+        return PasswordUtil.MD5(PasswordUtil.MD5(password) + salt);
     }
 }

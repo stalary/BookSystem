@@ -1,9 +1,3 @@
-/**
- * @(#)ResponseMessage.java, 2018-01-04.
- * <p>
- * Copyright 2018 Youdao, Inc. All rights reserved.
- * YOUDAO PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
 package com.stalary.book.data;
 
 import lombok.AllArgsConstructor;
@@ -44,8 +38,16 @@ public class ResponseMessage {
         return new ResponseMessage(0, "success", null, data);
     }
 
+    public static ResponseMessage successMessage() {
+        return new ResponseMessage(0, "success", null, null);
+    }
+
     public static ResponseMessage failedMessage(String message) {
         return new ResponseMessage(1, "failed", message, null);
+    }
+
+    public static ResponseMessage failedMessage() {
+        return new ResponseMessage(1, "failed", null, null);
     }
 
 }

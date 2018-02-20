@@ -1,5 +1,20 @@
 spring:
   profiles:
     active: dev
+  http:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
 mybatis:
   mapperLocations: classpath:mapper/*.xml
+  configuration:
+    cache-enabled: true
+    default-statement-timeout: 3000
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+logging:
+  level:
+    com:
+      stalary:
+        book:
+          mapper: debug

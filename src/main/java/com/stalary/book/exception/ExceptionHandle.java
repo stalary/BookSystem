@@ -25,7 +25,7 @@ public class ExceptionHandle {
             return ResponseMessage.error(myException.getCode(), myException.getMessage());
         } else {
             log.error("[系统异常] {}", e);
-            return ResponseMessage.error(-1000, "运行时异常！");
+            return ResponseMessage.error(666, "运行时异常！");
         }
     }
 }
