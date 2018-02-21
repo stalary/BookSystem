@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.icepdf.core.pobjects.Document;
 import org.icepdf.core.pobjects.Page;
 import org.icepdf.core.util.GraphicsRenderingHints;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +35,9 @@ import java.util.concurrent.Executors;
 @Service
 @Slf4j
 public class QiniuService {
+
+    @Autowired
+    private BookService bookService;
 
     private static ExecutorService executor = Executors.newCachedThreadPool();
 
@@ -66,12 +70,14 @@ public class QiniuService {
      * @param book
      * @return
      */
-    public String uploadBook(MultipartFile book) {
+    public String uploadBook(MultipartFile book, Book newBook) {
         final String bookName = SystemUtil.BOOK + SystemUtil.SPLIT +  PasswordUtil.get5UUID() + ".pdf";
         executor.execute(() -> {
             try {
                 Response response = uploadManager.put(book.getBytes(), bookName, getUpToken());
                 if (response.isOK() && response.isJson()) {
+                    newBook.setPdfUrl(QINIU_IMAGE_DOMAIN + bookName);
+                    bookService.saveBook(newBook);
                     log.info("上传图书成功：" + bookName);
                 } else {
                     log.error("上传图书失败：" + response.bodyString());
