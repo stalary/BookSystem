@@ -59,7 +59,7 @@ public class ManagerService {
             Future<?> bookSubmit = executor.submit(() -> qiniuService.uploadBook(book));
             Book newBook = new Book();
             if (StringUtils.isBlank(name)) {
-                newBook.setBookName(bookService.getBookName(book));
+                newBook.setBookName(book.getOriginalFilename().substring(0, dotPos));
             } else {
                 newBook.setBookName(name);
             }
