@@ -61,14 +61,14 @@ public class BookController {
         return ResponseMessage.successMessage(bookDtoList);
     }
 
-    @ApiOperation("获取一本图书的详细信息和评论信息，传入图书id")
+    @ApiOperation(value = "获取一本图书信息", notes = "传入图书id")
     @GetMapping("/books/{bookId}/info")
     public ResponseMessage getInfo(
             @PathVariable("bookId") int bookId) {
         return ResponseMessage.successMessage(managerService.getInfo(bookId));
     }
 
-    @ApiOperation("下载时，获取图书的url，用于统计下载数量，传入图书id")
+    @ApiOperation(value = "下载图书", notes = "下载时，获取图书的url，用于统计下载数量，传入图书id")
     @GetMapping("/books/{bookId}")
     public ResponseMessage downloadBook(
             @PathVariable("bookId") int bookId) {
