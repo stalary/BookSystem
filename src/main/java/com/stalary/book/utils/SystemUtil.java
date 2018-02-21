@@ -13,6 +13,8 @@ public class SystemUtil {
 
     public static final String UPDATE = "update ";
 
+    public static final String DELETE = "delete from ";
+
     public static final String SELECT = "select ";
 
     public static final String FROM = " from ";

@@ -92,7 +92,7 @@ public class BookController {
     @LoginRequired
     public ResponseMessage delete(
             @PathVariable("bookId") int bookId) {
-        bookService.delete(bookId);
+        managerService.delete(bookId);
         return ResponseMessage.successMessage("删除成功");
     }
 

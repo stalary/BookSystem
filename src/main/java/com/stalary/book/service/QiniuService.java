@@ -3,12 +3,15 @@ package com.stalary.book.service;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
+import com.qiniu.storage.BucketManager;
 import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
+import com.stalary.book.data.entity.Book;
 import com.stalary.book.utils.PasswordUtil;
 import com.stalary.book.utils.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.icepdf.core.pobjects.Document;
 import org.icepdf.core.pobjects.Page;
 import org.icepdf.core.util.GraphicsRenderingHints;
@@ -45,8 +48,12 @@ public class QiniuService {
 
     // 密钥配置
     private Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
+    // 创建配置对象
+    Configuration cfg = new Configuration(Zone.huadong());
     // 创建上传对象
-    private UploadManager uploadManager = new UploadManager(new Configuration(Zone.huadong()));
+    private UploadManager uploadManager = new UploadManager(cfg);
+    // 创建空间管理对象
+    private BucketManager bucketManager = new BucketManager(auth, cfg);
 
     // 获得简单上传的凭证
     private String getUpToken() {
@@ -63,14 +70,6 @@ public class QiniuService {
         final String bookName = SystemUtil.BOOK + SystemUtil.SPLIT +  PasswordUtil.get5UUID() + ".pdf";
         executor.execute(() -> {
             try {
-                int dotPos = book.getOriginalFilename().lastIndexOf(".");
-                if (dotPos < 0) {
-                    log.error("上传图书格式错误");
-                }
-                String bookExt = book.getOriginalFilename().substring(dotPos + 1).toLowerCase();
-                if (!bookExt.equals("pdf")) {
-                    log.error("上传图书格式错误");
-                }
                 Response response = uploadManager.put(book.getBytes(), bookName, getUpToken());
                 if (response.isOK() && response.isJson()) {
                     log.info("上传图书成功：" + bookName);
@@ -116,5 +115,24 @@ public class QiniuService {
             }
         });
         return QINIU_IMAGE_DOMAIN + coverName;
+    }
+
+    /**
+     * 删除图书
+     *
+     * @param book
+     */
+    public void deleteBook(Book book) {
+        String pdfKey = StringUtils.substringAfter(book.getPdfUrl(), QINIU_IMAGE_DOMAIN);
+        String coverKey = StringUtils.substringAfter(book.getCoverUrl(), QINIU_IMAGE_DOMAIN);
+        executor.execute(() -> {
+            try {
+                bucketManager.delete(BUCKET_NAME, pdfKey);
+                bucketManager.delete(BUCKET_NAME, coverKey);
+                log.info("删除图书成功");
+            } catch (QiniuException e) {
+                log.error("删除图书失败：" + e.getMessage());
+            }
+        });
     }
 }

@@ -1,9 +1,11 @@
 package com.stalary.book.service;
 
+import com.stalary.book.data.ResultEnum;
 import com.stalary.book.data.dto.BookAndCommentDto;
 import com.stalary.book.data.dto.BookDto;
 import com.stalary.book.data.dto.CommentDto;
 import com.stalary.book.data.entity.Book;
+import com.stalary.book.exception.MyException;
 import com.stalary.book.handle.UserContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -44,6 +46,14 @@ public class ManagerService {
     private DtoService dtoService;
 
     public void upload(MultipartFile book, String name) {
+        int dotPos = book.getOriginalFilename().lastIndexOf(".");
+        if (dotPos < 0) {
+            throw new MyException(ResultEnum.BOOK_FORMAT_ERROR);
+        }
+        String bookExt = book.getOriginalFilename().substring(dotPos + 1).toLowerCase();
+        if (!bookExt.equals("pdf")) {
+            throw new MyException(ResultEnum.BOOK_FORMAT_ERROR);
+        }
         try {
             Future<?> coverSubmit = executor.submit(() -> qiniuService.uploadCover(book));
             Future<?> bookSubmit = executor.submit(() -> qiniuService.uploadBook(book));
@@ -63,6 +73,16 @@ public class ManagerService {
         } catch (InterruptedException | ExecutionException e) {
             log.error("upload error!", e);
         }
+    }
+
+    public void delete(int bookId) {
+        Book book = bookService.getInfo(bookId);
+        if (book.getUserId() != UserContextHolder.get().getId()) {
+            throw new MyException(ResultEnum.BOOK_DELETE_ERROR);
+        }
+        executor.submit(() -> qiniuService.deleteBook(book));
+        bookService.delete(book.getId());
+        log.info("delete success!");
     }
 
     public BookAndCommentDto getInfo(int id) {

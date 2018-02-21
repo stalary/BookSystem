@@ -15,6 +15,8 @@ public enum ResultEnum {
     PASSWORD_ERROR(-4, "密码错误！"),
     EMAIL_ERROR(-5, "邮箱错误！"),
     NOT_REGISTER(-6, "未注册"),
+    BOOK_FORMAT_ERROR(-7, "图书格式错误"),
+    BOOK_DELETE_ERROR(-8, "非图书上传者无权限删除该图书"),
     SUCCESS(0, "成功");
 
     @Getter
