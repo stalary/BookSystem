@@ -66,7 +66,7 @@ public interface BookDao {
      * 删除一本图书
      * @param id
      */
-    @Update({SystemUtil.UPDATE, TABLE_NAME, "set status=-1", SystemUtil.WHERE, "id=#{id}", SystemUtil.STATUS})
-    void delete(int id);
+    @Update({SystemUtil.DELETE, TABLE_NAME, SystemUtil.WHERE, "id=#{id}"})
+    void delete(@Param("id") int id);
 
 }
