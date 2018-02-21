@@ -128,6 +128,10 @@ public class UserService{
     }
 
     public User getInfo(int id) {
-        return userDao.findById(id);
+        User user = userDao.findById(id);
+        if (null == user) {
+            throw new MyException(ResultEnum.USER_NOT_FOUND);
+        }
+        return user;
     }
 }

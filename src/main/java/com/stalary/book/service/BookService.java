@@ -1,6 +1,8 @@
 package com.stalary.book.service;
 
+import com.stalary.book.data.ResultEnum;
 import com.stalary.book.data.entity.Book;
+import com.stalary.book.exception.MyException;
 import com.stalary.book.mapper.BookDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,37 +27,27 @@ public class BookService {
     public void saveBook(Book book) {
         bookDao.save(book);
     }
-    /**
-     * 获得上传图书的书名
-     *
-     * @param book
-     * @return
-     */
-    public String getBookName(MultipartFile book) {
-        int dotPos = book.getOriginalFilename().lastIndexOf(".");
-        return book.getOriginalFilename().substring(0, dotPos);
-    }
 
-    public List<Book> findAll() {
-        return bookDao.findAll();
+    public List<Book> findAll(int pageIndex, int pageSize) {
+        return bookDao.findAll((pageIndex - 1) * pageSize, pageSize);
     }
 
     public String downloadBook(int id) {
         Book book = getInfo(id);
-        if (book == null) {
-            log.error("book: " + id + "not found！");
-            return null;
-        } else {
-            bookDao.downloadBook(id, book.getDownloadCount() + 1);
-            return book.getPdfUrl();
-        }
+        bookDao.downloadBook(id, book.getDownloadCount() + 1);
+        return book.getPdfUrl();
     }
 
     public Book getInfo(int id) {
-        return bookDao.getInfo(id);
+        Book book = bookDao.getInfo(id);
+        if (null == book) {
+            throw new MyException(ResultEnum.BOOK_NOT_FOUND);
+        }
+        return book;
     }
 
     public void delete(int id) {
+        getInfo(id);
         bookDao.delete(id);
     }
 

@@ -2,7 +2,6 @@ package com.stalary.book.mapper;
 
 import com.stalary.book.data.entity.Book;
 import com.stalary.book.utils.SystemUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -20,13 +19,13 @@ public interface BookDao {
     String INSERT_FIELDS = " bookName, userId, coverUrl, pdfUrl, createTime, updateTime";
 
     /**
-     * 获得所有图书，按照上传时间和分数降序排序
+     * 获得所有图书，按照上传时间和分数降序排序，并进行分页
      *
      * @return 图书List
      */
     @Select({SystemUtil.SELECT, ALL_FIELDS, SystemUtil.FROM, TABLE_NAME, SystemUtil.WHERE, "status >= 0",
-            " ORDER BY createTime DESC"})
-    List<Book> findAll();
+            " ORDER BY createTime DESC", " LIMIT #{offset}, #{rowCount}"})
+    List<Book> findAll(@Param("offset") int offset, @Param("rowCount") int rowCount);
 
     /**
      * 插入一本书
@@ -67,7 +66,7 @@ public interface BookDao {
      * 删除一本图书
      * @param id
      */
-    @Update({SystemUtil.UPDATE, TABLE_NAME, "set status=-1", SystemUtil.WHERE, "id=#{id}", SystemUtil.STATUS})
-    void delete(int id);
+    @Update({SystemUtil.DELETE, TABLE_NAME, SystemUtil.WHERE, "id=#{id}"})
+    void delete(@Param("id") int id);
 
 }
