@@ -56,7 +56,6 @@ public class ManagerService {
         }
         try {
             Future<?> coverSubmit = executor.submit(() -> qiniuService.uploadCover(book));
-            Future<?> bookSubmit = executor.submit(() -> qiniuService.uploadBook(book));
             Book newBook = new Book();
             if (StringUtils.isBlank(name)) {
                 newBook.setBookName(book.getOriginalFilename().substring(0, dotPos));
@@ -64,11 +63,11 @@ public class ManagerService {
                 newBook.setBookName(name);
             }
             newBook.setUserId(UserContextHolder.get().getId());
-            newBook.setPdfUrl(bookSubmit.get().toString());
             newBook.setCoverUrl(coverSubmit.get().toString());
             newBook.setCreateTime(new Date());
             newBook.setUpdateTime(new Date());
-            bookService.saveBook(newBook);
+            Future<?> bookSubmit = executor.submit(() -> qiniuService.uploadBook(book, newBook));
+            bookSubmit.get();
             log.info("upload success!");
         } catch (InterruptedException | ExecutionException e) {
             log.error("upload error!", e);
