@@ -36,7 +36,7 @@ public class BookService {
 
     public List<Book> findByKey(int pageIndex, int pageSize, String key) {
         Page page = new Page(pageIndex, pageSize);
-        return bookDao.findByKey(page.getStart(), pageSize, key);
+        return bookDao.findByKey(page.getStart(), pageSize, "%" + key + "%");
     }
 
     public String downloadBook(int id) {
