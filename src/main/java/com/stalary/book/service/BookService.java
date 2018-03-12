@@ -1,5 +1,6 @@
 package com.stalary.book.service;
 
+import com.stalary.book.data.Page;
 import com.stalary.book.data.ResultEnum;
 import com.stalary.book.data.entity.Book;
 import com.stalary.book.exception.MyException;
@@ -29,7 +30,13 @@ public class BookService {
     }
 
     public List<Book> findAll(int pageIndex, int pageSize) {
-        return bookDao.findAll((pageIndex - 1) * pageSize, pageSize);
+        Page page = new Page(pageIndex, pageSize);
+        return bookDao.findAll(page.getStart(), pageSize);
+    }
+
+    public List<Book> findByKey(int pageIndex, int pageSize, String key) {
+        Page page = new Page(pageIndex, pageSize);
+        return bookDao.findByKey(page.getStart(), pageSize, key);
     }
 
     public String downloadBook(int id) {

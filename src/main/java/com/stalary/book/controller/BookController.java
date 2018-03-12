@@ -10,6 +10,7 @@ import com.stalary.book.service.DtoService;
 import com.stalary.book.service.ManagerService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,12 +49,18 @@ public class BookController {
         return ResponseMessage.successMessage("上传成功！");
     }
 
-    @ApiOperation(value = "获取图书列表", notes = "pageIndex为第几页，pageSize为每页大小，不传默认获取前10项")
+    @ApiOperation(value = "获取图书列表", notes = "pageIndex为第几页，pageSize为每页大小，不传默认获取前10项，传入key则代表模糊查询")
     @GetMapping("/books")
     public ResponseMessage getBookList(
             @RequestParam(required = false, defaultValue = "1") int pageIndex,
-            @RequestParam(required = false, defaultValue = "10") int pageSize) {
-        List<Book> bookList = bookService.findAll(pageIndex, pageSize);
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            @RequestParam(required = false, defaultValue = "") String key) {
+        List<Book> bookList;
+        if (StringUtils.isBlank(key)) {
+            bookList = bookService.findAll(pageIndex, pageSize);
+        } else {
+            bookList = bookService.findByKey(pageIndex, pageSize, key);
+        }
         List<BookDto> bookDtoList = bookList
                 .stream()
                 .map(book -> dtoService.getBookDto(book))

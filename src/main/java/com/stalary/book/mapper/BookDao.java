@@ -27,6 +27,10 @@ public interface BookDao {
             " ORDER BY createTime DESC", " LIMIT #{offset}, #{rowCount}"})
     List<Book> findAll(@Param("offset") int offset, @Param("rowCount") int rowCount);
 
+    @Select({SystemUtil.SELECT, ALL_FIELDS, SystemUtil.FROM, TABLE_NAME, SystemUtil.WHERE, "bookName like %#{key}%",
+            SystemUtil.STATUS, " ORDER BY createTime DESC", " LIMIT #{offset}, #{rowCount}"})
+    List<Book> findByKey(@Param("offset") int offset, @Param("rowCount") int rowCount, @Param("key") String key);
+
     /**
      * 插入一本书
      *
