@@ -29,8 +29,11 @@ public class CommentController {
     @LoginRequired
     public ResponseMessage saveComment(
             @RequestBody Comment comment) {
-        commentService.save(comment);
-        return ResponseMessage.successMessage("评论成功！");
+        boolean save = commentService.save(comment);
+        if (save) {
+            return ResponseMessage.successMessage("评论成功！");
+        }
+        return ResponseMessage.failedMessage("评论失败！请勿重复评论");
     }
 
 }

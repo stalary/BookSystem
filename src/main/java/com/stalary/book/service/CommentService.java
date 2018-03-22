@@ -25,10 +25,15 @@ public class CommentService {
         return commentDao.findByBookId(bookId);
     }
 
-    public void save(Comment comment) {
+    public boolean save(Comment comment) {
+        Comment oldComment = commentDao.findByUserId(UserContextHolder.get().getId());
+        if (oldComment != null) {
+            return false;
+        }
         comment.setCreateTime(new Date());
         comment.setUpdateTime(new Date());
         comment.setUserId(UserContextHolder.get().getId());
         commentDao.save(comment);
+        return true;
     }
 }

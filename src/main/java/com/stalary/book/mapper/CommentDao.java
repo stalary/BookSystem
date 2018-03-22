@@ -28,6 +28,12 @@ public interface CommentDao {
     void save(Comment comment);
 
     /**
+     * 通过用户id查找一条评论
+     */
+    @Select({SystemUtil.SELECT, ALL_FIELDS, SystemUtil.FROM, TABLE_NAME, SystemUtil.WHERE, "userId=#{userId}", SystemUtil.STATUS, "limit 1"})
+    Comment findByUserId(int userId);
+
+    /**
      * 通过图书id查找评论
      * @param bookId
      * @return
