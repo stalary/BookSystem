@@ -72,7 +72,7 @@ public class DtoService {
         List<Comment> comments = commentService.findByBookId(book.getId());
         OptionalDouble average = comments.stream().mapToInt(Comment::getScore).average();
         if (average.isPresent()) {
-            bookDto.setScore(average.getAsDouble());
+            bookDto.setScore(Math.round(average.getAsDouble()));
         } else {
             bookDto.setScore(0.0);
         }
