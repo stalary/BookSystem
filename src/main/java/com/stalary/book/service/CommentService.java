@@ -26,7 +26,7 @@ public class CommentService {
     }
 
     public boolean save(Comment comment) {
-        Comment oldComment = commentDao.findByUserId(UserContextHolder.get().getId());
+        Comment oldComment = commentDao.findByUserIdAndBookId(UserContextHolder.get().getId(), comment.getBookId());
         if (oldComment != null) {
             return false;
         }
