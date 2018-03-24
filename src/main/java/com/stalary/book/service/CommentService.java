@@ -3,6 +3,7 @@ package com.stalary.book.service;
 import com.stalary.book.data.entity.Comment;
 import com.stalary.book.handle.UserContextHolder;
 import com.stalary.book.mapper.CommentDao;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * @since 2018/02/19
  */
 @Service
+@Slf4j
 public class CommentService {
 
     @Autowired

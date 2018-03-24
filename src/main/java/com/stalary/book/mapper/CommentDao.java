@@ -4,6 +4,7 @@ import com.stalary.book.data.entity.Comment;
 import com.stalary.book.utils.SystemUtil;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -30,8 +31,8 @@ public interface CommentDao {
     /**
      * 通过用户id查找一条评论
      */
-    @Select({SystemUtil.SELECT, ALL_FIELDS, SystemUtil.FROM, TABLE_NAME, SystemUtil.WHERE, "userId=#{userId}, bookId=#{bookId}", SystemUtil.STATUS, "limit 1"})
-    Comment findByUserIdAndBookId(int userId, int bookId);
+    @Select({SystemUtil.SELECT, ALL_FIELDS, SystemUtil.FROM, TABLE_NAME, SystemUtil.WHERE, "userId=#{userId} and bookId=#{bookId}", SystemUtil.STATUS, "limit 1"})
+    Comment findByUserIdAndBookId(@Param("userId") int userId, @Param("bookId")int bookId);
 
     /**
      * 通过图书id查找评论
