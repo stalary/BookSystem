@@ -8,7 +8,6 @@ import com.stalary.book.mapper.BookDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -54,8 +53,9 @@ public class BookService {
     }
 
     public void delete(int id) {
-        getInfo(id);
-        bookDao.delete(id);
+        if (bookDao.delete(id) == 0) {
+            throw new MyException(ResultEnum.BOOK_NOT_FOUND);
+        }
     }
 
     public List<Book> findByUserId(int userId) {
