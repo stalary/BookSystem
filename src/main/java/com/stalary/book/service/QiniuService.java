@@ -42,13 +42,10 @@ public class QiniuService {
     private static ExecutorService executor = Executors.newCachedThreadPool();
 
 
-    // 账号密钥，可在个人中心-密钥管理中查看
-    private static String ACCESS_KEY = "TnIOszZVvneKT9xI9ySSiXpbpCsJeBGoFCUu6jTl";
-    private static String SECRET_KEY = "1Mf5ksCyGwIzxTJoZ2zSUS65tS034t48G9nMQJV_";
-    // 要上传的空间
-    private static String BUCKET_NAME = "hawk97";
-    // 七牛默认外链域名
-    private static String QINIU_IMAGE_DOMAIN = "http://p44lruo4o.bkt.clouddn.com/";
+    private static String ACCESS_KEY = "zfg7aGCs98DbKp_zKHzOAwzd6BoPhLjPkO5ohzEG";
+    private static String SECRET_KEY = "l-fs00VcPP2nZRBKZmJj7LeSShi2wKxSMN5RL10w";
+    private static String BUCKET_NAME = "stalary";
+    private static String QINIU_IMAGE_DOMAIN = "http://p037i675p.bkt.clouddn.com/";
 
     // 密钥配置
     private Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);

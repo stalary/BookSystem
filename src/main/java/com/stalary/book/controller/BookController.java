@@ -11,11 +11,14 @@ import com.stalary.book.service.ManagerService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -55,17 +58,20 @@ public class BookController {
             @RequestParam(required = false, defaultValue = "1") int pageIndex,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "") String key) {
-        List<Book> bookList;
+        Pair<List<Book>, Double> pair;
         if (StringUtils.isBlank(key)) {
-            bookList = bookService.findAll(pageIndex, pageSize);
+            pair = bookService.findAll(pageIndex, pageSize);
         } else {
-            bookList = bookService.findByKey(pageIndex, pageSize, key);
+            pair = bookService.findByKey(pageIndex, pageSize, key);
         }
-        List<BookDto> bookDtoList = bookList
+        List<BookDto> bookDtoList = pair.getValue0()
                 .stream()
                 .map(book -> dtoService.getBookDto(book))
                 .collect(Collectors.toList());
-        return ResponseMessage.successMessage(bookDtoList);
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("bookList", bookDtoList);
+        map.put("total", pair.getValue1());
+        return ResponseMessage.successMessage(map);
     }
 
     @ApiOperation(value = "获取一本图书信息", notes = "传入图书id")

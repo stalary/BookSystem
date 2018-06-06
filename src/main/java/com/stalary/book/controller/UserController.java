@@ -72,6 +72,8 @@ public class UserController {
         return ResponseMessage.successMessage(userService.getInfo(id));
     }
 
+
+
     @ApiOperation(value = "退出")
     @GetMapping("/logout")
     @LoginRequired

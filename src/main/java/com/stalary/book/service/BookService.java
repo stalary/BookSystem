@@ -6,9 +6,9 @@ import com.stalary.book.data.entity.Book;
 import com.stalary.book.exception.MyException;
 import com.stalary.book.mapper.BookDao;
 import lombok.extern.slf4j.Slf4j;
+import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -29,14 +29,18 @@ public class BookService {
         bookDao.save(book);
     }
 
-    public List<Book> findAll(int pageIndex, int pageSize) {
+    public Pair<List<Book>, Double> findAll(int pageIndex, int pageSize) {
         Page page = new Page(pageIndex, pageSize);
-        return bookDao.findAll(page.getStart(), pageSize);
+        List<Book> bookList = bookDao.findAll(page.getStart(), pageSize);
+        Integer total = bookDao.findAllTotal();
+        return new Pair<>(bookList, Math.ceil((float) total / pageSize));
     }
 
-    public List<Book> findByKey(int pageIndex, int pageSize, String key) {
+    public Pair<List<Book>, Double> findByKey(int pageIndex, int pageSize, String key) {
         Page page = new Page(pageIndex, pageSize);
-        return bookDao.findByKey(page.getStart(), pageSize, "%" + key + "%");
+        List<Book> bookList = bookDao.findByKey(page.getStart(), pageSize, "%" + key + "%");
+        Integer total = bookDao.findByKeyTotal("%" + key + "%");
+        return new Pair<>(bookList, Math.ceil((float) total / pageSize));
     }
 
     public String downloadBook(int id) {
